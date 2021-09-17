@@ -1,0 +1,7 @@
+{
+  "name": "ecom-multisite-app",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
