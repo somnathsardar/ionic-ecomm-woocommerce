@@ -1,0 +1,29 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>home</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div *ngIf = "products.length == 0">
+    <h3 style="text-align: center; margin-top: 50px;">No Products</h3>
+  </div>
+  <div *ngIf = "products.length">
+    <ion-grid>
+      <ion-row>
+        <ion-col *ngFor = "let product of products" size="12" class="product-container">
+          <ion-card>
+            <ion-card-header>
+              <img src="{{product.images[0].src}}" class="product-image">
+              <ion-card-title class="product-title">{{product.name}}</ion-card-title>
+              <h4 class="product-price">
+                <span *ngIf = "product.sale_price" class="product-compare-at-price">{{product.regular_price}}</span>
+                <span class="product-sale-price">{{product.price}}</span>
+              </h4>
+            </ion-card-header>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+</ion-content>

@@ -1,0 +1,16 @@
+
+.loading-icon {
+  --background: #222;
+  --spinner-color: #fff;
+
+  color: #fff;
+}
+.product-container{
+  .product-price{
+    .product-compare-at-price{
+      margin-right: 10px;
+      color: #ec4a4a;
+      text-decoration: line-through #888686;
+    }
+  }
+}
