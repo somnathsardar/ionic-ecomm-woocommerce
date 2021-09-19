@@ -24,3 +24,82 @@
 @import "~@ionic/angular/css/text-alignment.css";
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
+
+/* Font family import */
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100&family=Rubik:ital,wght@0,300;1,300&display=swap');
+
+ion-header{
+  ion-title{
+    font-family: 'Montserrat', sans-serif;
+  }
+}
+ion-content{
+  font-family: 'Montserrat', sans-serif;
+}
+
+.loading-icon {
+  --background: #222;
+  --spinner-color: #fff;
+
+  color: #fff;
+}
+
+ion-slides {
+  height: 100%;
+}
+
+.product-price-container{
+  font-size: 1.15rem;
+
+  del{
+    color: #f31c1c;
+    margin-right: 8px;
+    font-weight: 600;
+  }
+}
+
+.product-details-container{
+  ul{
+    li{
+      margin-bottom: 8px;
+    }
+  }
+}
+.product-decription-txt{
+  border-bottom: 1px solid white;
+  margin-bottom: 0px;
+  padding-bottom: 10px;
+}
+.add-to-cart-btn{
+  margin-top: 0px;
+  margin-bottom: 0px;
+  height: 100%;
+}
+.product-quantity-container{
+  border: 1px solid white;
+}
+.product-quantity-input{
+  border-right: 1px solid white;
+  border-left: 1px solid white;
+}
+.add-to-cart-error {
+  color: white;
+  font-weight: 600;
+  background: #cc1212;
+  padding: 4px;
+  border-radius: 3px;
+}
+p.add-to-cart-success {
+  color: white;
+  font-weight: 600;
+  background: #1c9831;
+  padding: 4px;
+  border-radius: 3px;
+}
+.cart-icon{
+  font-size: 25px;
+}
+.cart-icon.has-cart-items{
+  color: #4aec4a;
+}

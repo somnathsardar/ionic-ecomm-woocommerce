@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { app_constants, getUrl, getAuthParam } from 'src/app/constants/constants';
+import { getUrl, getAuthParam, getQueryUrl } from 'src/app/constants/constants';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +13,15 @@ export class ProductService {
   }
   
   getAllProducts(){
-    return this.http.get(getUrl(this.type), {params: getAuthParam()}).toPromise();
+    let _url = getUrl(this.type);
+    let _params = getAuthParam();
+    return this.http.get(_url, {params: _params}).toPromise();
+  }
+
+  getSingleProduct(id){
+    let _url = getUrl(this.type);
+    let _params = getAuthParam();
+    let _newUrl = getQueryUrl(_url, id);
+    return this.http.get(_newUrl, {params: _params}).toPromise();
   }
 }

@@ -1,0 +1,52 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Product</ion-title>
+    <ion-buttons slot="end">
+      <ion-button [routerLink]="['/cart']" routerLinkActive="router-link-active">
+        <ion-icon *ngIf="cart.hasCartItems; else noCartItemBlock" name="bag-check-outline" class="has-cart-items cart-icon"></ion-icon>
+        <ng-template #noCartItemBlock>
+          <ion-icon name="bag-outline" class="no-cart-items cart-icon"></ion-icon>
+        </ng-template>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div *ngIf = "product" style="padding: 8px 8px;">
+    <ion-slides *ngIf = "product.images.length; else noImageBlock" [options] = "productImageSliderOption" class="ion-paddinfg">
+      <ion-slide *ngFor = "let image of product.images">
+        <img src="{{image.src}}">
+      </ion-slide>
+    </ion-slides>
+    <ng-template #noImageBlock>
+      <img src="/assets/no-image-found.png" class="product-image">
+    </ng-template>
+    <h3>{{product.name}}</h3>
+    <p [innerHTML] = "product.price_html | formatMoney" class="product-price-container"></p>
+    <ion-grid>
+      <ion-row>
+        <ion-col size = "5">
+          <ion-buttons class="product-quantity-container">
+            <ion-button class="product-quantity-minus" (click)="decreaseQuantity()"><ion-icon name="remove-outline"></ion-icon></ion-button>
+            <ion-input class="ion-text-center product-quantity-input" type="number" [(ngModel)]="productQuantity" (change)="setQuantity()"></ion-input>
+            <ion-button class="product-quantity-plus" (click)="increaseQuantity()"><ion-icon name="add-outline"></ion-icon></ion-button>
+          </ion-buttons>
+        </ion-col>
+        <ion-col size="1"></ion-col>
+        <ion-col size = "6">
+          <ion-button class="add-to-cart-btn" expand="full" (click)="addToCart($event)">{{addToCartBtnText}}</ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <div class="add-to-cart-msg-container">
+      <p *ngIf="cart.addToCartStatus.error.status" class="add-to-cart-error">{{cart.addToCartStatus.error.message}}</p>
+      <p *ngIf="cart.addToCartStatus.success.status" class="add-to-cart-success">{{cart.addToCartStatus.success.message}}</p>
+    </div>
+    <h4 class="product-decription-txt">Product description</h4>
+    <div class="product-details-container" [innerHTML] = "product.description"></div>
+  </div>
+</ion-content>

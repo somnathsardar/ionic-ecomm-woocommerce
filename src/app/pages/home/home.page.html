@@ -1,6 +1,14 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>home</ion-title>
+    <ion-title>Home</ion-title>
+    <ion-buttons slot="end">
+      <ion-button [routerLink]="['/cart']" routerLinkActive="router-link-active">
+        <ion-icon *ngIf="cart.hasCartItems; else noCartItemBlock" name="bag-check-outline" class="has-cart-items cart-icon"></ion-icon>
+        <ng-template #noCartItemBlock>
+          <ion-icon name="bag-outline" class="no-cart-items cart-icon"></ion-icon>
+        </ng-template>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -12,14 +20,14 @@
     <ion-grid>
       <ion-row>
         <ion-col *ngFor = "let product of products" size="12" class="product-container">
-          <ion-card>
+          <ion-card [routerLink]="['/product', product.id]" routerLinkActive="router-link-active" >
             <ion-card-header>
-              <img src="{{product.images[0].src}}" class="product-image">
+              <img *ngIf = "product.images.length; else noImageBlock" src="{{product.images[0].src}}" class="product-image">
+              <ng-template #noImageBlock>
+                <img src="/assets/no-image-found.png" class="product-image">
+              </ng-template>
               <ion-card-title class="product-title">{{product.name}}</ion-card-title>
-              <h4 class="product-price">
-                <span *ngIf = "product.sale_price" class="product-compare-at-price">{{product.regular_price}}</span>
-                <span class="product-sale-price">{{product.price}}</span>
-              </h4>
+              <p [innerHTML] = "product.price_html | formatMoney" class="product-price-container"></p>
             </ion-card-header>
           </ion-card>
         </ion-col>

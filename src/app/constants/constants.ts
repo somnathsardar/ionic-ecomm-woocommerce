@@ -5,12 +5,27 @@ export const app_constants = {
   api_version: 'wc/v3'
 }
 
+export const app_settings = {
+  cart: {
+    addToCartBtnText: "Add to cart",
+    onAddingBtnText: 'Adding...',
+    addToCartSuccessText: 'Product added successfully',
+    addToCartErrorText: 'Something went wrong.'
+  }
+}
+
 export const getUrl = (type)=>{
   return `${app_constants.sotreUrl}/wp-json/${app_constants.api_version}/${type}`
 }
 
-export const getAuthParam = (params = {})=>{
-  params['consumer_key'] = app_constants.consumer_key
-  params['consumer_secret'] = app_constants.consumer_secret
+export const getAuthParam = ()=>{
+  let params = {
+    'consumer_key' : app_constants.consumer_key,
+    'consumer_secret' : app_constants.consumer_secret,
+  }
   return params;
+}
+
+export const getQueryUrl = (url, query)=>{
+  return url+'/'+query
 }

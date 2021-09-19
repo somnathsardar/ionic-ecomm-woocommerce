@@ -4,19 +4,20 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { HomePageRoutingModule } from './home-routing.module';
+import { ProductPageRoutingModule } from './product-routing.module';
 
-import { HomePage } from './home.page';
-import { PipesModule } from '../../pipes/pipes.module'
+import { ProductPage } from './product.page';
+
+import { PipesModule } from '../../pipes/pipes.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    HomePageRoutingModule,
+    ProductPageRoutingModule,
     PipesModule
   ],
-  declarations: [HomePage]
+  declarations: [ProductPage]
 })
-export class HomePageModule {}
+export class ProductPageModule {}
