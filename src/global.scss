@@ -103,3 +103,17 @@ p.add-to-cart-success {
 .cart-icon.has-cart-items{
   color: #4aec4a;
 }
+.cart-items-container{
+  .cart-header{
+    text-align: center;
+    margin: 30px 0px;
+  }
+  .cart-items{
+    .cart-product-image-container{
+      .product-image{
+        max-height: 110px;
+        width: 100%;
+      }
+    }
+  }
+}

@@ -18,7 +18,7 @@ export class ProductService {
     return this.http.get(_url, {params: _params}).toPromise();
   }
 
-  getSingleProduct(id){
+  async getSingleProduct(id){
     let _url = getUrl(this.type);
     let _params = getAuthParam();
     let _newUrl = getQueryUrl(_url, id);
