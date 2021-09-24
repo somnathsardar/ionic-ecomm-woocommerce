@@ -11,7 +11,7 @@ import { StorageService } from '../../Services/Storage/storage.service';
 export class HomePage implements OnInit {
 
   products: any = [];
-  loading: any;
+  loading: any = '';
   cart = {
     addToCartStatus :{
       error: {
@@ -26,18 +26,21 @@ export class HomePage implements OnInit {
     hasCartItems: null,
   };
 
-  constructor(private productService: ProductService, private loadingCtrl: LoadingController, private storage:StorageService) {
+  constructor(private productService: ProductService, private storage:StorageService) {
   }
 
   ngOnInit() {
-    this.loading = this.loadingCtrl.create({
-      message: 'Please wait...',
-      cssClass: 'loading-icon',
-    }).then((res)=>{
-      res.present();
-    })
-  
+    this.loading = "Loading..."
     this.getProducts()
+  }
+
+  ionViewDidEnter(){
+    this.storage.get('cart').then((cart)=>{
+      if(cart)
+        this.cart.hasCartItems = true;
+      else
+        this.cart.hasCartItems = false;
+    })
   }
 
   getProducts() {
@@ -47,17 +50,9 @@ export class HomePage implements OnInit {
       this.products = data;
     })
     .catch(err=>{
-      console.log(err)
+      console.log(err);
     })
-    .finally(()=>{
-      this.storage.get('cart').then((cart)=>{
-        if(cart)
-          this.cart.hasCartItems = true;
-        else
-          this.cart.hasCartItems = false;
-        this.loadingCtrl.dismiss();
-      })
-    })
+    .finally(()=>{this.loading = '';})
   }
 
 }

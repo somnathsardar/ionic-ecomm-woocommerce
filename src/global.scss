@@ -115,5 +115,19 @@ p.add-to-cart-success {
         width: 100%;
       }
     }
+    .cart-items-description{
+      .cart-item-input-quantity-box{
+        max-width: 25px;
+        input{
+          padding: 0px;
+        }
+      }
+    }
+  }
+  .subtotal-container{
+    .checkout-btn{
+      float: right;
+      margin-right: 10px;
+    }
   }
 }

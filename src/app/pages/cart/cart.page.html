@@ -8,7 +8,7 @@
 </ion-header>
 
 <ion-content>
-  <div *ngIf="cart; else noProductsBlock" class="cart-items-container">
+  <div *ngIf="cart.length && loading == ''; else noProductsBlock" class="cart-items-container">
     <h3 class="cart-header">Cart items</h3>
     <ion-card *ngFor="let data of cart" class="cart-items">
       <ion-grid>
@@ -25,10 +25,12 @@
             <ion-grid>
               <ion-row>
                 <ion-col size="12">
-                  <ion-buttons>
-                    <ion-button (click)="decreaseQuantity(data.product.id)"><ion-icon name="remove-outline"></ion-icon></ion-button>
-                    <ion-input class="ion-text-center" type="number" value="{{data.quantity}}" size="small" (change)="setQuantity($event, data.product.id)"></ion-input>
-                    <ion-button (click)="increaseQuantity(data.product.id)"><ion-icon name="add-outline"></ion-icon></ion-button>
+                  <ion-buttons class="ion-justify-content-between">
+                    <span style="display: flex;">
+                      <ion-button (click)="decreaseQuantity(data.product.id)"><ion-icon name="remove-outline"></ion-icon></ion-button>
+                      <ion-input class="ion-text-center cart-item-input-quantity-box" type="number" value="{{data.quantity}}" size="small" disabled (change)="setQuantity($event, data.product.id)"></ion-input>
+                      <ion-button (click)="increaseQuantity(data.product.id)"><ion-icon name="add-outline"></ion-icon></ion-button>
+                    </span>
                     <ion-button (click)="removeCartItem(data.id)" size="small"><ion-icon name="trash-outline"></ion-icon></ion-button>
                   </ion-buttons>
                 </ion-col>
@@ -38,8 +40,20 @@
         </ion-row>
       </ion-grid>
     </ion-card>
+    <ion-card>
+      <div>
+        <ion-card-header style="display: flex; justify-content: space-between;">
+          <ion-card-title>Subtotal</ion-card-title>
+          <ion-card-title><span [innerHTML] = "cart[0].product.price_html | currency"></span> {{subtotal}}</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-button class="checkout-btn ion-float-end ion-margin-bottom">Checkout</ion-button>
+        </ion-card-content>
+      </div>
+    </ion-card>
   </div>
   <ng-template #noProductsBlock>
-    <h3 style="text-align: center;">Cart empty</h3>
+    <h3 style="text-align: center;" *ngIf="loading == ''">Cart empty</h3>
+    <h3 style="text-align: center;" *ngIf="loading != ''">{{loading}}</h3>
   </ng-template>
 </ion-content>

@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { StorageService } from '../../Services/Storage/storage.service';
-import { LoadingController } from '@ionic/angular';
 import { ProductService } from '../../Services/Woocommerce/Products/product.service'
 
 @Component({
@@ -10,43 +9,44 @@ import { ProductService } from '../../Services/Woocommerce/Products/product.serv
 })
 export class CartPage implements OnInit {
 
-  cart: any;
+  cart: any = [];
   loading: any;
+  subtotal: number = 0;
 
-  constructor(private storage:StorageService, private loadingCtrl:LoadingController, private productService:ProductService,) { }
+  constructor(private storage:StorageService, private productService:ProductService,) { }
 
   ngOnInit() {
-    this.loading = this.loadingCtrl.create({
-      message: 'Please wait...',
-      cssClass: 'loading-icon',
-    }).then((res)=>{
-      res.present();
-    });
-
+    this.loading = 'Loading...';
     this.getLocalStorageData();
   }
 
   async getLocalStorageData(){
     this.storage.get('cart')
-    .then(async (data)=>{
+    .then(async (data:any)=>{
       if(data) {
         await Promise.all(data.map(async (element:any, index) => {
-          const tempData = await this.productService.getSingleProduct(element.id);
+          let tempData:any = await this.productService.getSingleProduct(element.id);
           data[index].product = tempData;
+          this.subtotal += parseFloat(tempData.price);
         }));
         this.cart = data;
         console.log(this.cart);
-        this.loadingCtrl.dismiss();
       }
       else {
         this.cart = [];
-        this.loadingCtrl.dismiss()
       }
     })
+    .catch(err=>{console.log("Error=> ", err);})
+    .finally(()=>{this.loading = '';})
   }
 
   removeCartItem(id){
     console.log(id)
+    this.cart = this.cart.filter(d=>d.id != id)
+    if(this.cart.length)
+      this.storage.set('cart', this.cart)
+    else
+      this.storage.remove('cart')
   }
 
   setQuantity(e, id){
@@ -55,11 +55,9 @@ export class CartPage implements OnInit {
     this.cart.map((element=>{
       if(element.id === id){
         if(newQuantity > 1){
-          console.log("If")
           element.quantity = newQuantity;
         }
         else{
-          console.log("Else")
           element.quantity = 1;
         }
       }

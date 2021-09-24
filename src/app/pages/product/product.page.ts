@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ProductService } from '../../Services/Woocommerce/Products/product.service';
-import { LoadingController } from '@ionic/angular';
 import { CoverflowSlideOptions, CubeSlideEffect, FadeSlideEffect, FlipSlideEffect } from '../../constants/sliderEffects';
 import { app_settings } from '../../constants/constants';
 import { StorageService } from '../../Services/Storage/storage.service';
@@ -14,7 +13,7 @@ import { StorageService } from '../../Services/Storage/storage.service';
 export class ProductPage implements OnInit {
 
   productId: any;
-  product: any = '';
+  product: any;
   loading: any;
   productImageSliderOption : {} = {}
   productQuantity: number;
@@ -33,7 +32,7 @@ export class ProductPage implements OnInit {
     hasCartItems: null,
   };
 
-  constructor( private activatedRoute:ActivatedRoute, private productService:ProductService, private loadingCtrl:LoadingController, private storage:StorageService) {
+  constructor( private activatedRoute:ActivatedRoute, private productService:ProductService, private storage:StorageService) {
     this.productImageSliderOption = FlipSlideEffect(1);
     this.productQuantity = 1;
     this.addToCartBtnText = app_settings.cart.addToCartBtnText;
@@ -42,16 +41,19 @@ export class ProductPage implements OnInit {
   }
 
   ngOnInit() {
-    this.loading = this.loadingCtrl.create({
-      message: 'Please wait...',
-      cssClass: 'loading-icon',
-    }).then((res)=>{
-      res.present();
-    });
-
+    this.loading = "Loading...";
     this.activatedRoute.params.subscribe((data)=>{
       this.productId = data.id;
       this.getProduct()
+    })
+  }
+
+  ionViewDidEnter(){
+    this.storage.get('cart').then((cart)=>{
+      if(cart)
+        this.cart.hasCartItems = true;
+      else
+        this.cart.hasCartItems = false;
     })
   }
 
@@ -59,26 +61,18 @@ export class ProductPage implements OnInit {
     this.productService.getSingleProduct(this.productId)
     .then(data=>{
       this.product = data;
-      console.log(this.product)
+      console.log(this.product);
     })
     .catch(err=>{
       console.log(err)
     })
-    .finally(()=>{
-      this.storage.get('cart').then((cart)=>{
-        if(cart)
-          this.cart.hasCartItems = true;
-        else
-          this.cart.hasCartItems = false;
-        this.loadingCtrl.dismiss();
-      })
-    })
+    .finally(()=>{this.loading = '';})
   }
 
   addToCart(event){
     this.addToCartBtnText = app_settings.cart.onAddingBtnText;
     event.target.setAttribute('disabled', true);
-    this.storage.get('cart').then(data=>{
+    this.storage.get('cart').then((data : any)=>{
       if(data){
         let addedProductData = data.find(d=>d.id === this.product.id)
         if(addedProductData){
@@ -111,19 +105,21 @@ export class ProductPage implements OnInit {
     .then(()=>{
       this.cart.addToCartStatus.success.status = true;
       this.cart.hasCartItems = true;
+      this.addToCartBtnText = app_settings.cart.addToCartBtnText;
+      event.target.setAttribute('disabled', false);
+
       setTimeout(()=>{
         this.cart.addToCartStatus.success.status = false;
-      }, 2000)
+      }, 2000);
     })
     .catch(()=>{
       this.cart.addToCartStatus.error.status = true;
+      this.addToCartBtnText = app_settings.cart.addToCartBtnText;
+      event.target.setAttribute('disabled', false);
+      
       setTimeout(()=>{
         this.cart.addToCartStatus.error.status = false;
       }, 2000)
-    })
-    .finally(()=>{
-      this.addToCartBtnText = app_settings.cart.addToCartBtnText;
-      event.target.setAttribute('disabled', false);
     })
   }
 

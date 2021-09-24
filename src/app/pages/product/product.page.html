@@ -16,7 +16,7 @@
 </ion-header>
 
 <ion-content>
-  <div *ngIf = "product" style="padding: 8px 8px;">
+  <div *ngIf="product && loading == ''" style="padding: 8px 8px;">
     <ion-slides *ngIf = "product.images.length; else noImageBlock" [options] = "productImageSliderOption" class="ion-paddinfg">
       <ion-slide *ngFor = "let image of product.images">
         <img src="{{image.src}}">
@@ -49,4 +49,5 @@
     <h4 class="product-decription-txt">Product description</h4>
     <div class="product-details-container" [innerHTML] = "product.description"></div>
   </div>
+  <h3 style="text-align: center; margin-top: 50px;" *ngIf="loading != ''">{{loading}}</h3>
 </ion-content>

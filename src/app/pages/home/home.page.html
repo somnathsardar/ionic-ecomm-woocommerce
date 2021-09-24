@@ -13,10 +13,13 @@
 </ion-header>
 
 <ion-content>
-  <div *ngIf = "products.length == 0">
-    <h3 style="text-align: center; margin-top: 50px;">No Products</h3>
+  <div *ngIf="products.length == 0 && loading != ''">
+    <h3 style="text-align: center; margin-top: 50px;" *ngIf="loading != ''; else showErrorMessageBlock">{{loading}}</h3>
+    <ng-template #showErrorMessageBlock>
+      <h3 style="text-align: center; margin-top: 50px;">No Products</h3>
+    </ng-template>
   </div>
-  <div *ngIf = "products.length">
+  <div *ngIf="products.length && loading == ''">
     <ion-grid>
       <ion-row>
         <ion-col *ngFor = "let product of products" size="12" class="product-container">
