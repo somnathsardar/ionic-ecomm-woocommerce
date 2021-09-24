@@ -47,7 +47,7 @@
           <ion-card-title><span [innerHTML] = "cart[0].product.price_html | currency"></span> {{subtotal}}</ion-card-title>
         </ion-card-header>
         <ion-card-content>
-          <ion-button class="checkout-btn ion-float-end ion-margin-bottom">Checkout</ion-button>
+          <ion-button class="checkout-btn ion-float-end ion-margin-bottom" [routerLink]="['/checkout']" routerLinkActive="router-link-active" >Checkout</ion-button>
         </ion-card-content>
       </div>
     </ion-card>

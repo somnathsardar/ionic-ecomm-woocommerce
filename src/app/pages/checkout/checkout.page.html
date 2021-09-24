@@ -1,0 +1,51 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Checkout</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div *ngIf="loading == ''">
+    <ion-segment [ngSwitch]="currentSegmentStep">
+      <ion-card *ngSwitchCase="'shipping'">
+        <form [formGroup]="shippingDetailsForm" (ngSubmit)="setShippingData()">
+          <h5>Billing address</h5>
+          <div formGroupName="billing">
+            <ion-item>
+              <ion-label>First Name</ion-label>
+              <ion-input type="text" formControlName="first_name"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label>Last Name</ion-label>
+              <ion-input type="text" formControlName="last_name"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label>Address Line 1</ion-label>
+              <ion-textarea formControlName="address_1"></ion-textarea>
+            </ion-item>
+            <ion-item>
+              <ion-label>Address Line 2</ion-label>
+              <ion-textarea formControlName="address_2"></ion-textarea>
+            </ion-item>
+            <ion-item>
+              <ion-label>City</ion-label>
+              <ion-textarea formControlName="city"></ion-textarea>
+            </ion-item>
+            <!-- <ion-item>
+              <ion-label>Country</ion-label>
+              <ion-select >
+                <ion-select-option *ngFor="let country of countries" value="country.code">{{country.name}}</ion-select-option>
+              </ion-select>
+            </ion-item> -->
+          </div>
+          <ion-button type="submit">Proceed to payment</ion-button>
+        </form>
+      </ion-card>
+      <ion-card *ngSwitchCase="'payment'">Show payment form</ion-card>
+    </ion-segment>
+  </div>
+  <h3 style="text-align: center;" *ngIf="loading != ''">{{loading}}</h3>
+</ion-content>
