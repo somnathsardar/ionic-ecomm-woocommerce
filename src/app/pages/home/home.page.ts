@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { LoadingController } from '@ionic/angular';
 import { ProductService } from '../../Services/Woocommerce/Products/product.service';
 import { StorageService } from '../../Services/Storage/storage.service';
 

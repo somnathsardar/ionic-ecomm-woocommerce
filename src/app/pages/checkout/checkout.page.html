@@ -17,47 +17,47 @@
             <div formGroupName="billing">
               <ion-item>
                 <ion-label position="floating">First Name</ion-label>
-                <ion-input type="text" formControlName="first_name"></ion-input>
+                <ion-input type="text" formControlName="first_name" name="first_name"></ion-input>
               </ion-item>
               <ion-item>
                 <ion-label position="floating">Last Name</ion-label>
-                <ion-input type="text" formControlName="last_name"></ion-input>
+                <ion-input type="text" formControlName="last_name" name="last_name"></ion-input>
               </ion-item>
               <ion-item>
                 <ion-label position="floating">Email</ion-label>
-                <ion-input type="email" formControlName="email"></ion-input>
+                <ion-input type="email" formControlName="email" name="email"></ion-input>
               </ion-item>
               <ion-item>
                 <ion-label position="floating">Phone</ion-label>
-                <ion-input type="text" formControlName="phone"></ion-input>
+                <ion-input type="text" formControlName="phone" name="phone"></ion-input>
               </ion-item>
               <ion-item>
                 <ion-label position="floating">Address Line 1</ion-label>
-                <ion-textarea formControlName="address_1"></ion-textarea>
+                <ion-textarea formControlName="address_1" name="address_1"></ion-textarea>
               </ion-item>
               <ion-item>
                 <ion-label position="floating">Address Line 2</ion-label>
-                <ion-textarea formControlName="address_2"></ion-textarea>
+                <ion-textarea formControlName="address_2" name="address_2"></ion-textarea>
               </ion-item>
               <ion-item>
                 <ion-label position="floating">Country</ion-label>
-                <ion-select (ionChange)="setStateVariable($event, 'billing')" formControlName="country">
+                <ion-select (ionChange)="setStateVariable($event, 'billing')" formControlName="country" name="country">
                   <ion-select-option *ngFor="let country of countries" value="{{country.code}}">{{country.name}}</ion-select-option>
                 </ion-select>
               </ion-item>
               <ion-item>
                 <ion-label position="floating">State</ion-label>
-                <ion-select formControlName="state">
+                <ion-select formControlName="state" name="state">
                   <ion-select-option *ngFor="let state of states_billing" value="{{state.code}}">{{state.name}}</ion-select-option>
                 </ion-select>
               </ion-item>
               <ion-item>
                 <ion-label position="floating">City</ion-label>
-                <ion-textarea formControlName="city"></ion-textarea>
+                <ion-textarea formControlName="city" name="city"></ion-textarea>
               </ion-item>
               <ion-item>
                 <ion-label position="floating">Pincode</ion-label>
-                <ion-input type="text" formControlName="postcode"></ion-input>
+                <ion-input type="text" formControlName="postcode" name="postcode"></ion-input>
               </ion-item>
             </div>
           </ion-card>
@@ -108,15 +108,15 @@
               </ion-item>
             </div>
           </ion-card>
-          <ion-button type="submit" style="margin: 16px 0px;" [disabled]="!shippingForm.valid">Proceed to payment</ion-button>
+          <ion-button type="submit" style="margin: 16px 0px;" [disabled]="!shippingForm.valid">Payment</ion-button>
         </form>
       </div>
       <div *ngSwitchCase="'payment'" style="width: 100%;">
         <form [formGroup]="paymentForm" (ngSubmit)="orderSummary()">
-          <ion-card>
+          <!-- <ion-card>
             <h5>Shipping method</h5>
             <ion-list>
-              <ion-radio-group value="flat_rate" (ionChange)="changeShippingMethod($event)">
+              <ion-radio-group (ionChange)="changeShippingMethod($event)">
                 <div *ngFor="let data of shipping">
                   <ion-item *ngIf="data.id === 'flat_rate'">
                     <ion-label>{{data.title}}</ion-label>
@@ -125,7 +125,7 @@
                 </div>        
               </ion-radio-group>
             </ion-list>
-          </ion-card>
+          </ion-card> -->
           <ion-card>
             <h5>Payment method</h5>
             <ion-list>
@@ -137,11 +137,61 @@
               </ion-radio-group>
             </ion-list>
           </ion-card>
-          <ion-button type="submit" style="margin: 16px 0px;" [disabled]="!paymentForm.valid">Proceed to order summary</ion-button>
+          <div>
+            <ion-button type="button" (click)="goBack('shipping')" style="margin-right: 10px;">Back</ion-button>
+            <ion-button type="submit" style="margin: 16px 0px;" [disabled]="!paymentForm.valid">Order summary</ion-button>
+          </div>
         </form>
       </div>
-      <div *ngSwitchCase="'orderSummary'" style="width: 100%;">
-        
+      <div *ngSwitchCase="'orderSummary'" style="width: 100%;" class="orderSummary">
+        <ion-card #billing style="text-align: left;">
+          <ion-card-header>
+            <ion-card-title style="border-bottom: 1px solid white; padding-bottom: 8px;">Billing</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-row>
+              <ion-col size="12" >{{orderForm.value.billing.first_name}} {{orderForm.value.billing.last_name}}</ion-col>
+              <ion-col size="12">{{orderForm.value.billing.email}}</ion-col>
+              <ion-col size="12">{{orderForm.value.billing.phone}}</ion-col>
+              <ion-col size="12" >{{orderForm.value.billing.address_1}}</ion-col>
+              <ion-col size="3">{{orderForm.value.billing.country}} <span *ngIf="orderForm.value.billing.state">({{orderForm.value.billing.state}})</span></ion-col>
+              <ion-col>{{orderForm.value.billing.city}} - {{orderForm.value.billing.postcode}}</ion-col>
+            </ion-row>
+          </ion-card-content>
+        </ion-card>
+        <ion-card #shipping style="text-align: left;">
+          <ion-card-header>
+            <ion-card-title style="border-bottom: 1px solid white; padding-bottom: 8px;">Shipping</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-row>
+              <ion-col size="12" >{{orderForm.value.shipping.first_name}} {{orderForm.value.shipping.last_name}}</ion-col>
+              <ion-col size="12" >{{orderForm.value.shipping.address_1}}</ion-col>
+              <ion-col size="3">{{orderForm.value.shipping.country}} <span *ngIf="orderForm.value.shipping.state">({{orderForm.value.shipping.state}})</span></ion-col>
+              <ion-col>{{orderForm.value.shipping.city}} - {{orderForm.value.shipping.postcode}}</ion-col>
+            </ion-row>
+          </ion-card-content>
+        </ion-card>
+        <ion-card #payment_option style="text-align: left;">
+          <ion-card-header>
+            <ion-card-title style="border-bottom: 1px solid white; padding-bottom: 8px;">Payment option</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-row>
+              <ion-col size="12" >{{orderForm.value.payment_method_title}}</ion-col>
+            </ion-row>
+          </ion-card-content>
+        </ion-card>
+        <ion-card #orderPrice>
+          <ion-card-content>
+            <h2 style="text-align: left;">Subtotal: {{cartTotal}}</h2>
+            <h2 style="text-align: left; margin-top: 8px" *ngIf="shippingCharge">Shipping charge: {{shippingCharge}}</h2>
+          </ion-card-content>
+        </ion-card>
+        <div style="margin-bottom: 10px;">
+          <ion-button (click)="goBack('payment')">Back</ion-button>
+          <ion-button (click)="placeOrder($event)">{{placeOrderBtnText}}</ion-button>
+        </div>
       </div>
     </ion-segment>
   </div>

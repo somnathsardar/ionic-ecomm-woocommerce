@@ -4,6 +4,7 @@ import { StorageService } from '../../Services/Storage/storage.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CheckoutService } from '../../Services/Woocommerce/Checkout/checkout.service';
 import { app_settings } from '../../constants/constants';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-checkout',
@@ -26,6 +27,8 @@ export class CheckoutPage implements OnInit {
   cartTotal: number = 0;
   totalTax: number = 0;
   subTotal: number = 0;
+  shippingCharge: any;
+  placeOrderBtnText: any = "Place Order";
   orderForm: FormGroup = this.fb.group({
     payment_method: [''],
     payment_method_title: [''],
@@ -62,10 +65,10 @@ export class CheckoutPage implements OnInit {
       address_1: ['', [Validators.required]],
       address_2: [''],
       country: ['', [Validators.required]],
-      state: ['', [Validators.required]],
+      state: [''],
       city: ['', [Validators.required]],
       postcode: ['', [Validators.required]],
-      email: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email]],
       phone: ['', [Validators.required]],
     }),
     shipping: this.fb.group({
@@ -87,12 +90,13 @@ export class CheckoutPage implements OnInit {
   })
 
 
-  constructor(private countryService:CountryService, private storage:StorageService, private fb: FormBuilder, private checkoutService: CheckoutService) {}
+  constructor(private countryService:CountryService, private storage:StorageService, private fb: FormBuilder, private checkoutService: CheckoutService, private navCtrl: NavController) {}
 
   ngOnInit() {
     this.loading = 'Loading...';
-    this.currentSegmentStep = 'orderSummary';
+    this.currentSegmentStep = 'shipping';
     this.shipping_billing_address_same = true;
+    this.shippingCharge = app_settings.shipping.charge;
     this.init();
   }
 
@@ -104,6 +108,7 @@ export class CheckoutPage implements OnInit {
     await this.getTaxes();
     await this.getShipping();
     await this.getCartTotal();
+    await this.setShippingLine();
     console.log(this.cartTotal, this.subTotal)
     this.loading = ""
   }
@@ -214,20 +219,38 @@ export class CheckoutPage implements OnInit {
     this.shipping_billing_address_same = event.detail.checked;
   }
 
-  changeShippingMethod(event){
-    console.log(event.detail);
-    let selectedShippingMethod = this.shipping.find(d=> d.id === event.detail.value);
-    selectedShippingMethod.total = app_settings.shipping.charge;
+  setShippingLine(){
+    let selectedShippingMethod = this.shipping.find(d=> d.id === 'flat_rate');
+    let finalShippingMethod = {
+      method_id: selectedShippingMethod.id,
+      method_title: selectedShippingMethod.title,
+      total: app_settings.shipping.charge.toString()
+    }
     let temp = [];
-    temp.push(selectedShippingMethod);
+    temp.push(finalShippingMethod);
+    this.paymentForm.controls['shipping_lines'].setValue(temp)
+  }
+
+  changeShippingMethod(event){
+    let selectedShippingMethod = this.shipping.find(d=> d.id === event.detail.value);
+    let finalShippingMethod = {
+      method_id: selectedShippingMethod.id,
+      method_title: selectedShippingMethod.title,
+      total: app_settings.shipping.charge
+    }
+    let temp = [];
+    temp.push(finalShippingMethod);
     this.paymentForm.controls['shipping_lines'].setValue(temp)
   }
 
   changePaymentMethod(event){
-    console.log(event.detail);
     let selectedPaymentMethod = this.paymentGateways.find(d=> d.id === event.detail.value);
     this.paymentForm.controls['payment_method'].setValue(selectedPaymentMethod.id);
     this.paymentForm.controls['payment_method_title'].setValue(selectedPaymentMethod.method_title);
+  }
+
+  goBack(newSegment:string){
+    this.currentSegmentStep = newSegment;
   }
 
   proceedToPayment(){
@@ -250,7 +273,21 @@ export class CheckoutPage implements OnInit {
       set_paid: this.paymentForm.value.set_paid,
       shipping_lines: this.paymentForm.value.shipping_lines,
     });
+    this.currentSegmentStep = 'orderSummary';
+  }
+
+  placeOrder(event){
+    event.target.disabled = true;
     console.log(this.orderForm.value);
+    this.placeOrderBtnText = "Loading...";
+    this.checkoutService.placeOrder(this.orderForm.value)
+    .then((data: any)=>{
+      console.log(data);
+      this.storage.remove('cart');
+      // this.navCtrl.navigateRoot('/order-status/'+data.id)
+    })
+    .catch(err=>{console.log("Error creating an order: ", err)})
+    .finally(()=>{this.placeOrderBtnText = "Place Order"; event.target.disabled = false;})
   }
 
 }

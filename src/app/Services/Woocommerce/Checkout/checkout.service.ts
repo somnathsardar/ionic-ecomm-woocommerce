@@ -29,4 +29,12 @@ export class CheckoutService {
     let _params = getAuthParam();
     return this.http.get(_url, {params: _params}).toPromise();
   }
+
+  placeOrder(orderObj:any){
+    let type = 'orders';
+    let _url = getUrl(type);
+    let _params = getAuthParam();
+    let body = JSON.stringify(orderObj)
+    return this.http.post(_url, body, {headers:{"Content-Type": "application/json"} ,params: _params}).toPromise();
+  }
 }
