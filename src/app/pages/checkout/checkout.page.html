@@ -10,41 +10,139 @@
 <ion-content>
   <div *ngIf="loading == ''">
     <ion-segment [ngSwitch]="currentSegmentStep">
-      <ion-card *ngSwitchCase="'shipping'">
-        <form [formGroup]="shippingDetailsForm" (ngSubmit)="setShippingData()">
-          <h5>Billing address</h5>
-          <div formGroupName="billing">
-            <ion-item>
-              <ion-label>First Name</ion-label>
-              <ion-input type="text" formControlName="first_name"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label>Last Name</ion-label>
-              <ion-input type="text" formControlName="last_name"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label>Address Line 1</ion-label>
-              <ion-textarea formControlName="address_1"></ion-textarea>
-            </ion-item>
-            <ion-item>
-              <ion-label>Address Line 2</ion-label>
-              <ion-textarea formControlName="address_2"></ion-textarea>
-            </ion-item>
-            <ion-item>
-              <ion-label>City</ion-label>
-              <ion-textarea formControlName="city"></ion-textarea>
-            </ion-item>
-            <!-- <ion-item>
-              <ion-label>Country</ion-label>
-              <ion-select >
-                <ion-select-option *ngFor="let country of countries" value="country.code">{{country.name}}</ion-select-option>
-              </ion-select>
-            </ion-item> -->
-          </div>
-          <ion-button type="submit">Proceed to payment</ion-button>
+      <div *ngSwitchCase="'shipping'" style="width: 100%;">
+        <form [formGroup]="shippingForm" (ngSubmit)="proceedToPayment()">
+          <ion-card>
+            <h5>Billing address</h5>
+            <div formGroupName="billing">
+              <ion-item>
+                <ion-label position="floating">First Name</ion-label>
+                <ion-input type="text" formControlName="first_name"></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-label position="floating">Last Name</ion-label>
+                <ion-input type="text" formControlName="last_name"></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-label position="floating">Email</ion-label>
+                <ion-input type="email" formControlName="email"></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-label position="floating">Phone</ion-label>
+                <ion-input type="text" formControlName="phone"></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-label position="floating">Address Line 1</ion-label>
+                <ion-textarea formControlName="address_1"></ion-textarea>
+              </ion-item>
+              <ion-item>
+                <ion-label position="floating">Address Line 2</ion-label>
+                <ion-textarea formControlName="address_2"></ion-textarea>
+              </ion-item>
+              <ion-item>
+                <ion-label position="floating">Country</ion-label>
+                <ion-select (ionChange)="setStateVariable($event, 'billing')" formControlName="country">
+                  <ion-select-option *ngFor="let country of countries" value="{{country.code}}">{{country.name}}</ion-select-option>
+                </ion-select>
+              </ion-item>
+              <ion-item>
+                <ion-label position="floating">State</ion-label>
+                <ion-select formControlName="state">
+                  <ion-select-option *ngFor="let state of states_billing" value="{{state.code}}">{{state.name}}</ion-select-option>
+                </ion-select>
+              </ion-item>
+              <ion-item>
+                <ion-label position="floating">City</ion-label>
+                <ion-textarea formControlName="city"></ion-textarea>
+              </ion-item>
+              <ion-item>
+                <ion-label position="floating">Pincode</ion-label>
+                <ion-input type="text" formControlName="postcode"></ion-input>
+              </ion-item>
+            </div>
+          </ion-card>
+          <ion-card>
+            <h5>Shipping address</h5>
+            <ion-list>
+              <ion-item>
+                <ion-label>Same as billing address</ion-label>
+                <ion-checkbox checked slot="start" style="margin-right: 10px;" (ionChange)="toggleShippingFormSection($event)"></ion-checkbox>
+              </ion-item>
+            </ion-list>
+            <div formGroupName="shipping" *ngIf="!shipping_billing_address_same">
+              <ion-item>
+                <ion-label position="floating">First Name</ion-label>
+                <ion-input type="text" formControlName="first_name"></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-label position="floating">Last Name</ion-label>
+                <ion-input type="text" formControlName="last_name"></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-label position="floating">Address Line 1</ion-label>
+                <ion-textarea formControlName="address_1"></ion-textarea>
+              </ion-item>
+              <ion-item>
+                <ion-label position="floating">Address Line 2</ion-label>
+                <ion-textarea formControlName="address_2"></ion-textarea>
+              </ion-item>
+              <ion-item>
+                <ion-label position="floating">Country</ion-label>
+                <ion-select (ionChange)="setStateVariable($event, 'shipping')" formControlName="country">
+                  <ion-select-option *ngFor="let country of countries" value="{{country.code}}">{{country.name}}</ion-select-option>
+                </ion-select>
+              </ion-item>
+              <ion-item>
+                <ion-label position="floating">State</ion-label>
+                <ion-select formControlName="state">
+                  <ion-select-option *ngFor="let state of states_shipping" value="{{state.code}}">{{state.name}}</ion-select-option>
+                </ion-select>
+              </ion-item>
+              <ion-item>
+                <ion-label position="floating">City</ion-label>
+                <ion-textarea formControlName="city"></ion-textarea>
+              </ion-item>
+              <ion-item>
+                <ion-label position="floating">Pincode</ion-label>
+                <ion-input type="text" formControlName="postcode"></ion-input>
+              </ion-item>
+            </div>
+          </ion-card>
+          <ion-button type="submit" style="margin: 16px 0px;" [disabled]="!shippingForm.valid">Proceed to payment</ion-button>
         </form>
-      </ion-card>
-      <ion-card *ngSwitchCase="'payment'">Show payment form</ion-card>
+      </div>
+      <div *ngSwitchCase="'payment'" style="width: 100%;">
+        <form [formGroup]="paymentForm" (ngSubmit)="orderSummary()">
+          <ion-card>
+            <h5>Shipping method</h5>
+            <ion-list>
+              <ion-radio-group value="flat_rate" (ionChange)="changeShippingMethod($event)">
+                <div *ngFor="let data of shipping">
+                  <ion-item *ngIf="data.id === 'flat_rate'">
+                    <ion-label>{{data.title}}</ion-label>
+                    <ion-radio value="{{data.id}}"></ion-radio>
+                  </ion-item>
+                </div>        
+              </ion-radio-group>
+            </ion-list>
+          </ion-card>
+          <ion-card>
+            <h5>Payment method</h5>
+            <ion-list>
+              <ion-radio-group (ionChange)="changePaymentMethod($event)">         
+                <ion-item *ngFor="let data of paymentGateways">
+                  <ion-label>{{data.title}}</ion-label>
+                  <ion-radio value="{{data.id}}"></ion-radio>
+                </ion-item>
+              </ion-radio-group>
+            </ion-list>
+          </ion-card>
+          <ion-button type="submit" style="margin: 16px 0px;" [disabled]="!paymentForm.valid">Proceed to order summary</ion-button>
+        </form>
+      </div>
+      <div *ngSwitchCase="'orderSummary'" style="width: 100%;">
+        
+      </div>
     </ion-segment>
   </div>
   <h3 style="text-align: center;" *ngIf="loading != ''">{{loading}}</h3>

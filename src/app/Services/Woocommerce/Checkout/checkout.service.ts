@@ -22,4 +22,11 @@ export class CheckoutService {
     let _params = getAuthParam();
     return this.http.get(_url, {params: _params}).toPromise();
   }
+
+  getShippingMethods(){
+    let type = 'shipping_methods';
+    let _url = getUrl(type);
+    let _params = getAuthParam();
+    return this.http.get(_url, {params: _params}).toPromise();
+  }
 }

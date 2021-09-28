@@ -11,6 +11,9 @@ export const app_settings = {
     onAddingBtnText: 'Adding...',
     addToCartSuccessText: 'Product added successfully',
     addToCartErrorText: 'Something went wrong.'
+  },
+  shipping: {
+    charge: 50.00
   }
 }
 
