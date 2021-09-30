@@ -284,7 +284,7 @@ export class CheckoutPage implements OnInit {
     .then((data: any)=>{
       console.log(data);
       this.storage.remove('cart');
-      // this.navCtrl.navigateRoot('/order-status/'+data.id)
+      this.navCtrl.navigateRoot('/order-status/'+data.id)
     })
     .catch(err=>{console.log("Error creating an order: ", err)})
     .finally(()=>{this.placeOrderBtnText = "Place Order"; event.target.disabled = false;})

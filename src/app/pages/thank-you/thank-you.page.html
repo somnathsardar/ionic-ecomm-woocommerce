@@ -5,5 +5,91 @@
 </ion-header>
 
 <ion-content>
+  <h3 style="text-align: center;" *ngIf="loading != ''; else showContentBlock">{{loading}}</h3>
+  <ng-template #showContentBlock>
+    <ion-card>
+      <div style="padding: 20px 10px 10px 10px;">
+        <div style="display: flex; align-items: center;">
+          <h2 class="margin-0">Thank You</h2>
+          <span style="margin-left: 8px;font-size: 15px;text-decoration: underline;color: #4d4de3;">#{{orderData.id}}</span>
+        </div>
+        <h4 style="letter-spacing: 2px;">Order confirmed</h4>
+      </div>
+      <ion-card-header #billing>
+        <ion-card-title>
+          Billing
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-row>
+          <ion-col size="12" >{{orderData.billing.first_name}} {{orderData.billing.last_name}}</ion-col>
+          <ion-col size="12">{{orderData.billing.email}}</ion-col>
+          <ion-col size="12">{{orderData.billing.phone}}</ion-col>
+          <ion-col size="12" >{{orderData.billing.address_1}}</ion-col>
+          <ion-col size="3">{{orderData.billing.country}} <span *ngIf="orderData.billing.state">({{orderData.billing.state}})</span></ion-col>
+          <ion-col>{{orderData.billing.city}} - {{orderData.billing.postcode}}</ion-col>
+        </ion-row>
+      </ion-card-content>
 
+      <ion-card-header #shipping>
+        <ion-card-title>
+          Shipping
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-row>
+          <ion-col size="12" >{{orderData.shipping.first_name}} {{orderData.shipping.last_name}}</ion-col>
+          <ion-col size="12" >{{orderData.shipping.address_1}}</ion-col>
+          <ion-col size="3">{{orderData.shipping.country}} <span *ngIf="orderData.shipping.state">({{orderData.shipping.state}})</span></ion-col>
+          <ion-col>{{orderData.shipping.city}} - {{orderData.shipping.postcode}}</ion-col>
+        </ion-row>
+      </ion-card-content>
+
+      <ion-card-header #payment>
+        <ion-card-title>
+          Payment method
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-row>
+          <ion-col size="12" >{{orderData.payment_method_title}}</ion-col>
+          <ion-col style="display: flex; align-items: center;">Payment Status:<ion-badge style="margin-left: 10px;">{{orderData.status}}</ion-badge></ion-col>
+        </ion-row>
+      </ion-card-content>
+
+      <ion-card-header #orderTotal>
+        <ion-card-title>
+          Order Total
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-row>
+          <ion-col size="12">
+            <div style="display: flex; justify-content: space-between;">
+              <div>Subtotal</div>
+              <div>{{shopCurrency}}{{subTotal}}</div>
+            </div>
+          </ion-col>
+          <ion-col size="12">
+            <div style="display: flex; justify-content: space-between;">
+              <div>Tax</div>
+              <div>{{shopCurrency}}{{taxTotal}}</div>
+            </div>
+          </ion-col>
+          <ion-col size="12">
+            <div style="display: flex; justify-content: space-between;">
+              <div>Shipping charge</div>
+              <div>{{shopCurrency}}{{shippingCharge}}</div>
+            </div>
+          </ion-col>
+          <ion-col size="12">
+            <div style="display: flex; justify-content: space-between;">
+              <h3>Total</h3>
+              <div>{{shopCurrency}}{{orderData.total}}</div>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-card-content>
+    </ion-card>
+  </ng-template>
 </ion-content>
