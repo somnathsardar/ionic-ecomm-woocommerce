@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { OrderService } from '../../Services/Woocommerce/Order/order.service'
+import { OrderService } from '../../Services/Woocommerce/Order/order.service';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-thank-you',
@@ -17,7 +18,7 @@ export class ThankYouPage implements OnInit {
   shippingCharge: number = 0;
   shopCurrency: string;
 
-  constructor(private activatedRoute:ActivatedRoute, private orderService: OrderService) { }
+  constructor(private activatedRoute:ActivatedRoute, private orderService: OrderService, private navController: NavController) { }
 
   ngOnInit() {
     this.loading = "Loading...";
@@ -53,6 +54,10 @@ export class ThankYouPage implements OnInit {
       this.shopCurrency = this.orderData.currency_symbol;
       resolve('');
     })
+  }
+
+  continueShopping(){
+    this.navController.navigateRoot('/')
   }
 
 }
