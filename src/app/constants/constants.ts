@@ -1,7 +1,7 @@
 export const app_constants = {
-  sotreUrl: 'https://ecom-multisite.com',
-  consumer_key: 'ck_2334331ee0c74301bade90a232b2c7ef3a1c2906',
-  consumer_secret: 'cs_312174bad946ccba232ef3a6e08a51583469855e',
+  sotreUrl: 'YOUR WOOCOMMERCE BACKEND URL',
+  consumer_key: 'YOUR CONSUMER KEY',
+  consumer_secret: 'YOUR CONSUMER SECRET',
   api_version: 'wc/v3'
 }
 
